@@ -1,15 +1,15 @@
 import { combineReducers } from "redux";
-import todos from "./todos";
-import visibilityFilter from "./visibilityFilter";
-import { TodoClass } from "../components/Classes";
-import { VisibilityFiltersTypes } from "../actions";
+import userPreferences, { UserPreferencesState } from "./userPreferences";
+import modal, { ModalState } from "./modal";
 
 export interface GlobalState {
-  todos: TodoClass[];
-  visibilityFilter: VisibilityFiltersTypes;
+  userPreferences: UserPreferencesState;
+  modal: ModalState;
 }
 
-export default combineReducers({
-  todos,
-  visibilityFilter,
+export const rootReducer = combineReducers({
+  userPreferences,
+  modal,
 });
+
+export type RootState = ReturnType<typeof rootReducer>;

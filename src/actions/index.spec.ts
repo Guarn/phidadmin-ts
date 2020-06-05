@@ -1,25 +1,33 @@
-import * as actions from ".";
+import actions from ".";
+import { ThemeActionTypes } from "./theme";
+import { modalOperations } from "../reducers/modal";
+import { ModalActionsTypes } from "./modal";
 
-describe("todo actions", () => {
-  it("addTodo should create adequate action", () => {
-    expect(actions.addTodo("COCO")).toEqual({
-      type: actions.ActionTypes.ADD_TODO,
-      id: 0,
-      text: "COCO",
+describe("Theme Actions", () => {
+  const { toggleDayNight } = actions.theme;
+
+  it("toggleDayNight should create adequate action", () => {
+    expect(toggleDayNight()).toEqual({
+      type: ThemeActionTypes.TOGGLE_DAY_NIGHT,
     });
   });
-  it("setVisibilityFilter should create adequate action", () => {
+});
+
+describe("Modal Actions", () => {
+  const { cancel, confirmation } = actions.modal;
+
+  it("confirmation should create adequate action", () => {
     expect(
-      actions.setVisibilityFilter(actions.VisibilityFiltersTypes.SHOW_ALL)
+      confirmation({ operation: modalOperations.create, target: "test" })
     ).toEqual({
-      type: actions.ActionTypes.SET_VISIBILITY_FILTER,
-      filter: actions.VisibilityFiltersTypes.SHOW_ALL,
+      type: ModalActionsTypes.CONFIRMATION,
+      operation: modalOperations.create,
+      target: "test",
     });
   });
-  it("toggleTodo should create adequate action", () => {
-    expect(actions.toggleTodo(5)).toEqual({
-      type: actions.ActionTypes.TOGGLE_TODO,
-      id: 5,
+  it("cancel should create adequate action", () => {
+    expect(cancel()).toEqual({
+      type: ModalActionsTypes.CANCEL,
     });
   });
 });

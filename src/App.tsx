@@ -1,19 +1,35 @@
 import React from "react";
-import styled from "styled-components/macro";
-import AddTodo from "./containers/AddTodo";
-import VisibleTodoList from "./containers/VisibleTodoList";
-import Footer from "./components/Footer";
+import styled, { ThemeProvider } from "styled-components/macro";
+import { connect, ConnectedProps } from "react-redux";
+import { ThemeType } from "./reducers/userPreferences";
+import { themeLight, themeDark, GlobalStyle } from "./App.styled";
+import { GlobalState } from "./reducers";
+import Menu from "./components/menu/Menu";
+import Modal from "./components/Modal";
 
-function App() {
+export type AppProps = ConnectedProps<typeof connector>;
+
+function App({ theme }: AppProps) {
   return (
-    <GlobalContainer>
-      <AddTodo />
-      <VisibleTodoList />
-      <Footer />
-    </GlobalContainer>
+    <ThemeProvider theme={theme === ThemeType.LIGHT ? themeLight : themeDark}>
+      <GlobalStyle />
+      <GlobalContainer>
+        <Menu />
+        <Modal />
+      </GlobalContainer>
+    </ThemeProvider>
   );
 }
 
-export default App;
+const mapStateToProps = (state: GlobalState) => {
+  return { theme: state.userPreferences.theme };
+};
 
-const GlobalContainer = styled.div``;
+const connector = connect(mapStateToProps);
+export default connector(App);
+
+const GlobalContainer = styled.main`
+  height: 100%;
+  width: 100%;
+  display: flex;
+`;

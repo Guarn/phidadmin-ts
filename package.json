@@ -11,12 +11,16 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
-    "@types/react-redux": "^7.1.7",
+    "@types/react-redux": "^7.1.9",
     "@types/styled-components": "^5.1.0",
+    "framer-motion": "^1.11.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
-    "react-scripts": "3.4.0",
+    "react-scripts": "3.4.1",
+    "slate": "^0.58.3",
+    "slate-history": "^0.58.3",
+    "slate-react": "^0.58.3",
     "styled-components": "^5.1.0",
     "typescript": "~3.8.2"
   },
@@ -42,6 +46,8 @@
     ]
   },
   "devDependencies": {
-    "babel-plugin-macros": "^2.8.0"
+    "@types/redux-mock-store": "^1.0.2",
+    "babel-plugin-macros": "^2.8.0",
+    "redux-mock-store": "^1.5.4"
   }
 }
