@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import * as S from "./Modal.styled";
 import { connect, ConnectedProps } from "react-redux";
@@ -10,21 +10,14 @@ import actions from "../../actions";
 export type ModalProps = ConnectedProps<typeof connector>;
 
 export const Modal = ({ modalState, dispatch }: ModalProps) => {
-  const portalNode = document.createElement("div");
-  portalNode.id = "modal-root";
+  let refContainer = document.getElementById("modal-root")!;
   const cancelModal = () => {
     dispatch(actions.modal.cancel());
   };
-  useEffect(() => {
-    document.body.appendChild(portalNode);
-    return () => {
-      portalNode.parentNode!.removeChild(portalNode);
-    };
-  });
 
   return ReactDOM.createPortal(
     <CreateModal cancelModal={cancelModal} isActive={modalState.isActive} />,
-    portalNode
+    refContainer
   );
 };
 
@@ -49,10 +42,7 @@ const variants = {
   },
 };
 
-export const CreateModal = ({
-  cancelModal,
-  isActive = false,
-}: CreateModalProps) => {
+export const CreateModal = ({ cancelModal, isActive }: CreateModalProps) => {
   const handleClickOutside = () => cancelModal();
   //prevents close dialog by clicking on middle
   const handleClickInside = (event: React.MouseEvent) => {

@@ -6,6 +6,7 @@ import { themeLight, themeDark, GlobalStyle } from "./App.styled";
 import { GlobalState } from "./reducers";
 import Menu from "./components/menu/Menu";
 import Modal from "./components/Modal";
+import SlateEditor from "./components/SlateEditor";
 
 export type AppProps = ConnectedProps<typeof connector>;
 
@@ -15,6 +16,7 @@ function App({ theme }: AppProps) {
       <GlobalStyle />
       <GlobalContainer>
         <Menu />
+        <SlateEditor />
         <Modal />
       </GlobalContainer>
     </ThemeProvider>

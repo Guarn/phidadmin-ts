@@ -6,6 +6,7 @@ import { rootReducer } from "../../reducers";
 import { render, fireEvent } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { modalOperations } from "../../reducers/modal";
+import { ModalActionsTypes } from "../../actions/modal";
 
 const store = createStore(rootReducer);
 
@@ -42,8 +43,11 @@ describe("CreateModal ui component", () => {
 
 describe("Modal ui component", () => {
   it("shoulnd't appear on init", () => {
+    ReactDOM.createPortal = jest.fn((element, node) => {
+      return element as React.ReactPortal;
+    });
     const dispatch = jest.fn();
-    const { queryByTestId } = render(
+    const { queryByTitle } = render(
       <>
         <Provider store={store}>
           <Modal
@@ -54,7 +58,7 @@ describe("Modal ui component", () => {
         <div id="modal-root"></div>
       </>
     );
-    expect(queryByTestId("Modal")).not.toBeInTheDocument();
+    expect(queryByTitle("Trash")).not.toBeInTheDocument();
   });
   it("should show modal window when isActive is true", async () => {
     ReactDOM.createPortal = jest.fn((element, node) => {
@@ -100,6 +104,6 @@ describe("Modal ui component", () => {
     );
 
     fireEvent.click(getByTestId("Modal"));
-    expect(dispatch).toBeCalled();
+    expect(dispatch).toHaveBeenCalledWith({ type: ModalActionsTypes.CANCEL });
   });
 });
