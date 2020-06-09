@@ -7,16 +7,8 @@ import { GlobalState } from "../../reducers";
 import actions from "../../actions";
 import withTables from "./withTables";
 import userInputsHandle from "./userInputsHandle";
-import { MarkButton, BlockButton } from "./Toolbar";
-import Leaf, { LEAF_TYPES } from "./renderLeafs";
-import Element, {
-  ELEMENT_TYPES,
-  componentH1,
-  componentH2,
-  componentH3,
-  setComponentThemeType,
-  componentP,
-} from "./renderBlocks";
+import Leaf from "./renderLeafs";
+import Element from "./renderBlocks";
 
 type SlateEditorProps = ConnectedProps<typeof connector>;
 
@@ -36,20 +28,6 @@ const SlateEditor = ({ slateState, dispatch }: SlateEditorProps) => {
 
   return (
     <Slate editor={editor} value={slateState.value} onChange={updateValue}>
-      <MarkButton format={LEAF_TYPES.bold} />
-      <BlockButton format={ELEMENT_TYPES.h1} />
-      <button onClick={() => setComponentThemeType(editor, componentH1)}>
-        H1
-      </button>
-      <button onClick={() => setComponentThemeType(editor, componentH2)}>
-        H2
-      </button>
-      <button onClick={() => setComponentThemeType(editor, componentH3)}>
-        H3
-      </button>
-      <button onClick={() => setComponentThemeType(editor, componentP)}>
-        para
-      </button>
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}

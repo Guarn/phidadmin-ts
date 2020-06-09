@@ -2,7 +2,7 @@ import React from "react";
 import { useSlate } from "slate-react";
 import { isMarkActive, isBlockActive } from "./utils";
 import * as S from "./SlateEditor.styled";
-import { toggleBlock, ELEMENT_TYPES } from "./renderBlocks";
+import { ELEMENT_TYPES } from "./renderBlocks";
 import { toggleMark, LEAF_TYPES } from "./renderLeafs";
 
 interface MarkButtonProps {
@@ -34,11 +34,11 @@ export const BlockButton = ({ format }: BlockButtonProps) => {
       active={isBlockActive(editor, format)}
       onMouseDown={(event) => {
         event.preventDefault();
-        toggleBlock(editor, format, {
-          backgroundColor: "red",
-          margin: 20,
-          padding: 20,
-        });
+        // toggleBlock(editor, format, {
+        //   backgroundColor: "red",
+        //   margin: 20,
+        //   padding: 20,
+        // });
       }}
     >
       H1

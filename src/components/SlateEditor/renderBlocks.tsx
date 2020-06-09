@@ -1,28 +1,9 @@
 import React from "react";
-import { Transforms, Element as SlateElement, Editor } from "slate";
 import { RenderElementProps, ReactEditor } from "slate-react";
-import { isBlockActive } from "./utils";
-
-interface BlockStyle {
-  backgroundColor?: string;
-  border?: string;
-  margin?: number;
-  padding?: number;
-  indentLevel?: number;
-  textAlign?: TEXT_ALIGNS;
-  transition?: string;
-  marginBlockStart?: number;
-  marginBlockEnd?: number;
-}
-
-interface ElementWithStyle extends SlateElement {
-  style: BlockStyle;
-  type: ELEMENT_TYPES;
-}
-
-interface RenderElementPropsWithStyle extends RenderElementProps {
-  element: ElementWithStyle;
-}
+import { CustomElement, ElementHtmlTypes } from "../../reducers/slateEditor";
+import { useSelector } from "react-redux";
+import { GlobalState } from "../../reducers";
+import { ThemeType } from "../../reducers/userPreferences";
 
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 export enum ELEMENT_TYPES {
@@ -39,114 +20,169 @@ export enum ELEMENT_TYPES {
   paragraph = "paragraph",
 }
 
-const Element = ({
+interface GetJSXElementFromNameProps {
+  attributes: SlateAttributes;
+  type: string;
+  children?: any;
+}
+
+type SlateAttributes = {
+  "data-slate-node": "element";
+  "data-slate-inline"?: true;
+  "data-slate-void"?: true;
+  dir?: "rtl";
+  ref: any;
+};
+
+interface SlateElementStyleProps {
+  element: CustomElement;
+  theme: ThemeType;
+}
+
+const getSlateElementStyle = ({ element, theme }: SlateElementStyleProps) => {
+  const {
+    backgroundColor,
+    border,
+    margin,
+    padding,
+    indentLevel,
+    contentAlignment,
+    transition,
+    marginBlockStart,
+    marginBlockEnd,
+    borderCollapse,
+  } = theme === ThemeType.LIGHT ? element.styleLight : element.styleDark;
+  return {
+    backgroundColor,
+    border,
+    margin,
+    padding,
+    marginBlockStart,
+    marginBlockEnd,
+    borderCollapse,
+  };
+};
+
+const GetJSXElementFromProps: React.FC<GetJSXElementFromNameProps> = ({
   attributes,
+  type,
   children,
-  element,
-}: RenderElementPropsWithStyle) => {
-  switch (element.type) {
-    case ELEMENT_TYPES.table:
-      return (
-        <table style={element.style}>
-          <tbody {...attributes}>{children}</tbody>
-        </table>
-      );
-    case ELEMENT_TYPES.tr:
-      return (
-        <tr style={element.style} {...attributes}>
-          {children}
-        </tr>
-      );
-    case ELEMENT_TYPES.td:
-      return (
-        <td style={element.style} {...attributes}>
-          {children}
-        </td>
-      );
-    case ELEMENT_TYPES.blockQuote:
-      return (
-        <blockquote style={element.style} {...attributes}>
-          {children}
-        </blockquote>
-      );
-    case ELEMENT_TYPES.bulletedList:
-      return (
-        <ul style={element.style} {...attributes}>
-          {children}
-        </ul>
-      );
-    case ELEMENT_TYPES.h1:
-      return (
-        <h1 style={element.style} {...attributes}>
-          {children}
-        </h1>
-      );
-    case ELEMENT_TYPES.h2:
-      return (
-        <h2 style={element.style} {...attributes}>
-          {children}
-        </h2>
-      );
-    case ELEMENT_TYPES.h3:
-      return (
-        <h3 style={element.style} {...attributes}>
-          {children}
-        </h3>
-      );
-    case ELEMENT_TYPES.listItem:
-      return (
-        <li style={element.style} {...attributes}>
-          {children}
-        </li>
-      );
-    case ELEMENT_TYPES.numberedList:
-      return (
-        <ol style={element.style} {...attributes}>
-          {children}
-        </ol>
-      );
-    default:
-      return (
-        <p style={element.style} {...attributes}>
-          {children}
-        </p>
-      );
+}) => {
+  const components = useSelector(
+    (state: GlobalState) => state.slateEditor.theme.components
+  );
+  const theme = useSelector(
+    (state: GlobalState) => state.userPreferences.theme
+  );
+  const element = components[type];
+
+  console.log(element.baseElement);
+  if (element.baseElement) {
+    switch (element.baseElement) {
+      case ElementHtmlTypes.h1:
+        return (
+          <h1 {...attributes} style={getSlateElementStyle({ element, theme })}>
+            {children}
+          </h1>
+        );
+      case ElementHtmlTypes.h2:
+        return (
+          <h2 {...attributes} style={getSlateElementStyle({ element, theme })}>
+            {children}
+          </h2>
+        );
+      case ElementHtmlTypes.h3:
+        return (
+          <h3 {...attributes} style={getSlateElementStyle({ element, theme })}>
+            {children}
+          </h3>
+        );
+      case ElementHtmlTypes.paragraph:
+        return (
+          <p {...attributes} style={getSlateElementStyle({ element, theme })}>
+            {children}
+          </p>
+        );
+      case ElementHtmlTypes.blockQuote:
+        return (
+          <blockquote
+            {...attributes}
+            style={getSlateElementStyle({ element, theme })}
+          >
+            {children}
+          </blockquote>
+        );
+      case ElementHtmlTypes.table:
+        return (
+          <table
+            {...attributes}
+            style={getSlateElementStyle({ element, theme })}
+          >
+            <tbody>{children}</tbody>
+          </table>
+        );
+      case ElementHtmlTypes.tr:
+        return (
+          <tr {...attributes} style={getSlateElementStyle({ element, theme })}>
+            {children}
+          </tr>
+        );
+      case ElementHtmlTypes.td:
+        return (
+          <td {...attributes} style={getSlateElementStyle({ element, theme })}>
+            {children}
+          </td>
+        );
+    }
   }
+
+  return <div>Not found element</div>;
 };
 
-export const toggleBlock = (
-  editor: ReactEditor,
-  format: ELEMENT_TYPES,
-  style?: BlockStyle
-) => {
-  const isActive = isBlockActive(editor, format);
-  const isList = LIST_TYPES.includes(format);
-
-  Transforms.unwrapNodes(editor, {
-    match: (n) => LIST_TYPES.includes(n.type as string),
-    split: true,
-  });
-
-  Transforms.setNodes(editor, {
-    type: isActive
-      ? ELEMENT_TYPES.paragraph
-      : isList
-      ? ELEMENT_TYPES.listItem
-      : format,
-    style: !isActive
-      ? {
-          backgroundColor: style?.backgroundColor || "transparent",
-          margin: style?.margin + "px" || 0,
-          padding: style?.padding + "px" || 0,
-        }
-      : undefined,
-  });
-
-  if (!isActive && isList) {
-    const block = { type: format, children: [] };
-    Transforms.wrapNodes(editor, block);
-  }
+const Element = ({ attributes, children, element }: RenderElementProps) => {
+  return (
+    <GetJSXElementFromProps
+      attributes={attributes}
+      type={element.type as string}
+    >
+      {children}
+    </GetJSXElementFromProps>
+  );
 };
+
+// export const toggleBlock = (
+//   editor: ReactEditor,
+//   format: ELEMENT_TYPES,
+//   style?: BlockStyle
+// ) => {
+//   const isActive = isBlockActive(editor, format);
+//   const isList = LIST_TYPES.includes(format);
+
+//   Transforms.unwrapNodes(editor, {
+//     match: (n) => LIST_TYPES.includes(n.type as string),
+//     split: true,
+//   });
+
+//   Transforms.setNodes(editor, {
+//     type: isActive
+//       ? ELEMENT_TYPES.paragraph
+//       : isList
+//       ? ELEMENT_TYPES.listItem
+//       : format,
+//     style: !isActive
+//       ? {
+//           backgroundColor: style?.backgroundColor || "transparent",
+//           margin: style?.margin + "px" || 0,
+//           padding: style?.padding + "px" || 0,
+//         }
+//       : undefined,
+//   });
+
+//   if (!isActive && isList) {
+//     const block = { type: format, children: [] };
+//     Transforms.wrapNodes(editor, block);
+//   }
+// };
 
 enum TEXT_ALIGNS {
   left = "left",
@@ -155,90 +191,38 @@ enum TEXT_ALIGNS {
   justify = "justify",
 }
 
-interface ThemeComponent {
-  themeId: string;
-  name: string;
-  type: ELEMENT_TYPES;
-  style: BlockStyle;
-}
+// interface ThemeComponent {
+//   themeId: string;
+//   name: string;
+//   type: ELEMENT_TYPES;
+//   style: BlockStyle;
+// }
 
-export const setComponentThemeType = (
-  editor: ReactEditor,
-  type: ThemeComponent
-) => {
-  const indexOfSelectedBlock = editor.selection?.anchor.path[0];
-  const currentSelection = { ...editor.selection };
-  let typePreviousBlock: string | null = null;
-  if (editor.selection) {
-    typePreviousBlock = Editor.parent(editor, editor.selection.anchor)[0]
-      .type as string;
-    console.log(typePreviousBlock);
-  }
+// export const setComponentThemeType = (
+//   editor: ReactEditor,
+//   type: ThemeComponent
+// ) => {
+//   const indexOfSelectedBlock = editor.selection?.anchor.path[0];
+//   const currentSelection = { ...editor.selection };
+//   let typePreviousBlock: string | null = null;
+//   if (editor.selection) {
+//     typePreviousBlock = Editor.parent(editor, editor.selection.anchor)[0]
+//       .type as string;
+//     console.log(typePreviousBlock);
+//   }
 
-  if (
-    typeof indexOfSelectedBlock === "number" &&
-    typePreviousBlock !== ELEMENT_TYPES.table &&
-    typePreviousBlock !== ELEMENT_TYPES.tr &&
-    typePreviousBlock !== ELEMENT_TYPES.td
-  ) {
-    Transforms.setNodes(editor, {
-      ...editor.children[indexOfSelectedBlock],
-      ...type,
-    });
-    Transforms.setSelection(editor, currentSelection);
-  }
-};
+//   if (
+//     typeof indexOfSelectedBlock === "number" &&
+//     typePreviousBlock !== ELEMENT_TYPES.table &&
+//     typePreviousBlock !== ELEMENT_TYPES.tr &&
+//     typePreviousBlock !== ELEMENT_TYPES.td
+//   ) {
+//     Transforms.setNodes(editor, {
+//       ...editor.children[indexOfSelectedBlock],
+//       ...type,
+//     });
+//     Transforms.setSelection(editor, currentSelection);
+//   }
+// };
 
 export default Element;
-
-export const componentH1: ThemeComponent = {
-  themeId: "1",
-  name: "Titre de chapitre",
-  type: ELEMENT_TYPES.h1,
-  style: {
-    backgroundColor: "salmon",
-    border: "1px solid grey",
-    margin: 20,
-    padding: 50,
-    indentLevel: 0,
-    textAlign: TEXT_ALIGNS.right,
-  },
-};
-
-export const componentH2: ThemeComponent = {
-  themeId: "1",
-  name: "Titre de sous chapitre",
-  type: ELEMENT_TYPES.h2,
-  style: {
-    backgroundColor: "salmon",
-    border: "1px solid grey",
-    margin: 20,
-    padding: 50,
-    indentLevel: 0,
-    textAlign: TEXT_ALIGNS.right,
-  },
-};
-export const componentH3: ThemeComponent = {
-  themeId: "1",
-  name: "Titre de sous sous chapitre",
-  type: ELEMENT_TYPES.h3,
-  style: {
-    backgroundColor: "salmon",
-    border: "1px solid grey",
-    padding: 50,
-    indentLevel: 0,
-    textAlign: TEXT_ALIGNS.right,
-
-    marginBlockStart: 0,
-    marginBlockEnd: 0,
-  },
-};
-
-export const componentP: ThemeComponent = {
-  themeId: "1",
-  name: "paragraphe",
-  type: ELEMENT_TYPES.paragraph,
-  style: {
-    textAlign: TEXT_ALIGNS.left,
-  },
-};

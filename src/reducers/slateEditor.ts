@@ -1,4 +1,4 @@
-import { Node } from "slate";
+import { Node, Element } from "slate";
 import {
   SlateEditorActions,
   SlateEditorActionsTypes,
@@ -30,7 +30,7 @@ export enum ContentAlignment {
   justify = "justify",
 }
 
-export interface SlateComponentStyle {
+export interface CustomElementStyle {
   backgroundColor?: string;
   border?: string;
   margin?: number;
@@ -40,20 +40,29 @@ export interface SlateComponentStyle {
   transition?: string;
   marginBlockStart?: number;
   marginBlockEnd?: number;
+  borderCollapse?:
+    | "-moz-initial"
+    | "inherit"
+    | "initial"
+    | "revert"
+    | "unset"
+    | "collapse"
+    | "separate"
+    | undefined;
 }
 
-export interface SlateComponent {
+export interface CustomElement extends Element {
   baseElement: ElementHtmlTypes | CustomHtmlTypes;
   name: string;
-  styleLight: SlateComponentStyle;
-  styleDark: SlateComponentStyle;
+  styleLight: CustomElementStyle;
+  styleDark: CustomElementStyle;
 }
 
 export interface SlateTheme {
   id: string;
   name: string;
   description: string;
-  components: SlateComponent[];
+  components: Record<string, CustomElement>;
 }
 
 export interface SlateEditorState {
@@ -74,36 +83,125 @@ const slateEditor = (
 };
 
 const initialValue = [
+  { type: "TITRE_CHAPITRE", children: [{ text: "Titre de Chapitre" }] },
   {
-    type: "table",
+    type: "SOUSTITRE_CHAPITRE",
+    children: [{ text: "Sous-titre de Chapitre" }],
+  },
+  { type: "PARAGRAPH", children: [{ text: "Paragraphe simple...." }] },
+  {
+    type: "TABLE",
     children: [
       {
-        type: "tr",
+        type: "TR",
         children: [
-          { type: "td", children: [{ text: "test" }] },
-          { type: "td", children: [{ text: "test" }] },
-          { type: "td", children: [{ text: "test" }] },
-          { type: "td", children: [{ text: "test" }] },
+          {
+            type: "TD",
+            children: [{ text: "" }],
+          },
+          {
+            type: "TD",
+            children: [{ text: "Titre 1" }],
+          },
+          {
+            type: "TD",
+            children: [{ text: "Titre 2" }],
+          },
+          {
+            type: "TD",
+            children: [{ text: "Titre 3" }],
+          },
         ],
       },
       {
-        type: "tr",
+        type: "TR",
         children: [
-          { type: "td", children: [{ text: "test" }] },
-          { type: "td", children: [{ text: "test" }] },
-          { type: "td", children: [{ text: "test" }] },
-          { type: "td", children: [{ text: "test" }] },
+          {
+            type: "TD",
+            children: [{ text: "Ligne 1" }],
+          },
+          {
+            type: "TD",
+            children: [{ text: "1" }],
+          },
+          {
+            type: "TD",
+            children: [{ text: "2" }],
+          },
+          {
+            type: "TD",
+            children: [{ text: "3" }],
+          },
         ],
       },
     ],
   },
 ];
+const TITRE_CHAPITRE: CustomElement = {
+  baseElement: ElementHtmlTypes.h2,
+  name: "TITRE_CHAPITRE",
+  styleLight: {
+    backgroundColor: "salmon",
+  },
+  styleDark: {},
+  children: [],
+};
+const SOUSTITRE_CHAPITRE: CustomElement = {
+  baseElement: ElementHtmlTypes.h3,
+  name: "SOUSTITRE_CHAPITRE",
+  styleLight: { padding: 30 },
+  styleDark: {},
+  children: [],
+};
+const PARAGRAPH: CustomElement = {
+  baseElement: ElementHtmlTypes.paragraph,
+  name: "PARAGRAPH",
+  styleLight: {},
+  styleDark: {},
+  children: [],
+};
+const BLOCK_QUOTE: CustomElement = {
+  baseElement: ElementHtmlTypes.blockQuote,
+  name: "BLOCK_QUOTE",
+  styleLight: {},
+  styleDark: {},
+  children: [],
+};
+const TABLE: CustomElement = {
+  baseElement: ElementHtmlTypes.table,
+  name: "TABLE",
+  styleLight: { border: "1px solid grey", borderCollapse: "collapse" },
+  styleDark: {},
+  children: [],
+};
+const TR: CustomElement = {
+  baseElement: ElementHtmlTypes.tr,
+  name: "TR",
+  styleLight: { border: "1px solid grey", borderCollapse: "collapse" },
+  styleDark: {},
+  children: [],
+};
+const TD: CustomElement = {
+  baseElement: ElementHtmlTypes.td,
+  name: "TD",
+  styleLight: { border: "1px solid grey", borderCollapse: "collapse" },
+  styleDark: {},
+  children: [],
+};
 
 const defaultTheme: SlateTheme = {
   id: "0",
   name: "defaultTheme",
   description: "This theme is the default theme.",
-  components: [],
+  components: {
+    TITRE_CHAPITRE,
+    SOUSTITRE_CHAPITRE,
+    PARAGRAPH,
+    BLOCK_QUOTE,
+    TABLE,
+    TR,
+    TD,
+  },
 };
 
 export default slateEditor;
