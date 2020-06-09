@@ -4,12 +4,65 @@ import {
   SlateEditorActionsTypes,
 } from "../actions/slateEditor";
 
+export enum CustomHtmlTypes {
+  img = "img",
+}
+
+export enum ElementHtmlTypes {
+  table = "table",
+  tr = "tr",
+  td = "td",
+  blockQuote = "block-quote",
+  bulletedList = "bulleted-list",
+  h1 = "h1",
+  h2 = "h2",
+  h3 = "h3",
+  listItem = "list-item",
+  numberedList = "numbered-list",
+  paragraph = "paragraph",
+  custom = "custom",
+}
+
+export enum ContentAlignment {
+  left = "left",
+  right = "right",
+  center = "center",
+  justify = "justify",
+}
+
+export interface SlateComponentStyle {
+  backgroundColor?: string;
+  border?: string;
+  margin?: number;
+  padding?: number;
+  indentLevel?: number;
+  contentAlignment?: ContentAlignment;
+  transition?: string;
+  marginBlockStart?: number;
+  marginBlockEnd?: number;
+}
+
+export interface SlateComponent {
+  baseElement: ElementHtmlTypes | CustomHtmlTypes;
+  name: string;
+  styleLight: SlateComponentStyle;
+  styleDark: SlateComponentStyle;
+}
+
+export interface SlateTheme {
+  id: string;
+  name: string;
+  description: string;
+  components: SlateComponent[];
+}
+
 export interface SlateEditorState {
   value: Node[];
+  theme: SlateTheme;
 }
 
 const slateEditor = (
-  state: SlateEditorState = { value: initialValue },
+  state: SlateEditorState = { value: initialValue, theme: defaultTheme },
   action: SlateEditorActions
 ) => {
   switch (action.type) {
@@ -27,24 +80,6 @@ const initialValue = [
       {
         type: "tr",
         children: [
-          { type: "td", children: [{ text: "test1" }] },
-          { type: "td", children: [{ text: "test2" }] },
-          { type: "td", children: [{ text: "test3" }] },
-          { type: "td", children: [{ text: "test4" }] },
-        ],
-      },
-      {
-        type: "tr",
-        children: [
-          { type: "td", children: [{ text: "test" }] },
-          { type: "td", children: [{ text: "test" }] },
-          { type: "td", children: [{ text: "test" }] },
-          { type: "td", children: [{ text: "test" }] },
-        ],
-      },
-      {
-        type: "tr",
-        children: [
           { type: "td", children: [{ text: "test" }] },
           { type: "td", children: [{ text: "test" }] },
           { type: "td", children: [{ text: "test" }] },
@@ -62,56 +97,13 @@ const initialValue = [
       },
     ],
   },
-  {
-    type: "table",
-    children: [
-      {
-        type: "tr",
-        children: [
-          { type: "td", children: [{ text: "test" }] },
-          { type: "td", children: [{ text: "test" }] },
-          { type: "td", children: [{ text: "test" }] },
-          { type: "td", children: [{ text: "test" }] },
-        ],
-      },
-      {
-        type: "tr",
-        children: [
-          { type: "td", children: [{ text: "test" }] },
-          { type: "td", children: [{ text: "test" }] },
-          { type: "td", children: [{ text: "test" }] },
-          { type: "td", children: [{ text: "test" }] },
-        ],
-      },
-    ],
-  },
-  {
-    type: "paragraph",
-    children: [{ text: "hahafqsf qslfkjsqldkmfj mlsqdfj lmsdfjqmsl" }],
-  },
-  //   {
-  //     type: "newTable",
-  //     children: [
-  //       {
-  //         text: "",
-  //       },
-  //     ],
-  //     dataTable: [
-  //       { head: "Entete", content: [{ case: "test" }, { case: " de numero" }] },
-  //       {
-  //         head: "Entete",
-  //         content: [{ case: "tterertertest" }, { case: " de numero" }],
-  //       },
-  //       {
-  //         head: "Entete",
-  //         content: [{ case: "tedfgdst" }, { case: " de numero" }],
-  //       },
-  //       {
-  //         head: "Entete",
-  //         content: [{ case: "t fgd gfgd dest" }, { case: " de numero" }],
-  //       },
-  //     ],
-  //   },
 ];
+
+const defaultTheme: SlateTheme = {
+  id: "0",
+  name: "defaultTheme",
+  description: "This theme is the default theme.",
+  components: [],
+};
 
 export default slateEditor;

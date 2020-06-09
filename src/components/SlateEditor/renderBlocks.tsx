@@ -1,12 +1,18 @@
 import React from "react";
-import { Transforms, Element as SlateElement } from "slate";
+import { Transforms, Element as SlateElement, Editor } from "slate";
 import { RenderElementProps, ReactEditor } from "slate-react";
 import { isBlockActive } from "./utils";
 
 interface BlockStyle {
   backgroundColor?: string;
+  border?: string;
   margin?: number;
   padding?: number;
+  indentLevel?: number;
+  textAlign?: TEXT_ALIGNS;
+  transition?: string;
+  marginBlockStart?: number;
+  marginBlockEnd?: number;
 }
 
 interface ElementWithStyle extends SlateElement {
@@ -83,9 +89,9 @@ const Element = ({
       );
     case ELEMENT_TYPES.h3:
       return (
-        <h2 style={element.style} {...attributes}>
+        <h3 style={element.style} {...attributes}>
           {children}
-        </h2>
+        </h3>
       );
     case ELEMENT_TYPES.listItem:
       return (
@@ -142,22 +148,97 @@ export const toggleBlock = (
   }
 };
 
-const setStyles = (editor: ReactEditor, style: BlockStyle) => {
-  const indexOfSelectedBlock = editor.selection?.anchor.path[0];
+enum TEXT_ALIGNS {
+  left = "left",
+  right = "right",
+  center = "center",
+  justify = "justify",
+}
 
-  if (typeof indexOfSelectedBlock === "number") {
-    if (editor.children[indexOfSelectedBlock].style) {
-      Transforms.setNodes(editor, {
-        ...editor.children[indexOfSelectedBlock],
-        style: undefined,
-      });
-    } else {
-      Transforms.setNodes(editor, {
-        ...editor.children[indexOfSelectedBlock],
-        style,
-      });
-    }
+interface ThemeComponent {
+  themeId: string;
+  name: string;
+  type: ELEMENT_TYPES;
+  style: BlockStyle;
+}
+
+export const setComponentThemeType = (
+  editor: ReactEditor,
+  type: ThemeComponent
+) => {
+  const indexOfSelectedBlock = editor.selection?.anchor.path[0];
+  const currentSelection = { ...editor.selection };
+  let typePreviousBlock: string | null = null;
+  if (editor.selection) {
+    typePreviousBlock = Editor.parent(editor, editor.selection.anchor)[0]
+      .type as string;
+    console.log(typePreviousBlock);
+  }
+
+  if (
+    typeof indexOfSelectedBlock === "number" &&
+    typePreviousBlock !== ELEMENT_TYPES.table &&
+    typePreviousBlock !== ELEMENT_TYPES.tr &&
+    typePreviousBlock !== ELEMENT_TYPES.td
+  ) {
+    Transforms.setNodes(editor, {
+      ...editor.children[indexOfSelectedBlock],
+      ...type,
+    });
+    Transforms.setSelection(editor, currentSelection);
   }
 };
 
 export default Element;
+
+export const componentH1: ThemeComponent = {
+  themeId: "1",
+  name: "Titre de chapitre",
+  type: ELEMENT_TYPES.h1,
+  style: {
+    backgroundColor: "salmon",
+    border: "1px solid grey",
+    margin: 20,
+    padding: 50,
+    indentLevel: 0,
+    textAlign: TEXT_ALIGNS.right,
+  },
+};
+
+export const componentH2: ThemeComponent = {
+  themeId: "1",
+  name: "Titre de sous chapitre",
+  type: ELEMENT_TYPES.h2,
+  style: {
+    backgroundColor: "salmon",
+    border: "1px solid grey",
+    margin: 20,
+    padding: 50,
+    indentLevel: 0,
+    textAlign: TEXT_ALIGNS.right,
+  },
+};
+export const componentH3: ThemeComponent = {
+  themeId: "1",
+  name: "Titre de sous sous chapitre",
+  type: ELEMENT_TYPES.h3,
+  style: {
+    backgroundColor: "salmon",
+    border: "1px solid grey",
+    padding: 50,
+    indentLevel: 0,
+    textAlign: TEXT_ALIGNS.right,
+
+    marginBlockStart: 0,
+    marginBlockEnd: 0,
+  },
+};
+
+export const componentP: ThemeComponent = {
+  themeId: "1",
+  name: "paragraphe",
+  type: ELEMENT_TYPES.paragraph,
+  style: {
+    textAlign: TEXT_ALIGNS.left,
+  },
+};
