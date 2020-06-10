@@ -1,5 +1,5 @@
 import React from "react";
-import { RenderElementProps, ReactEditor } from "slate-react";
+import { RenderElementProps } from "slate-react";
 import { CustomElement, ElementHtmlTypes } from "../../reducers/slateEditor";
 import { useSelector } from "react-redux";
 import { GlobalState } from "../../reducers";
@@ -52,14 +52,18 @@ const getSlateElementStyle = ({ element, theme }: SlateElementStyleProps) => {
     marginBlockEnd,
     borderCollapse,
   } = theme === ThemeType.LIGHT ? element.styleLight : element.styleDark;
+  const textIndent = ((indentLevel || 0) * 5).toString() + "%";
   return {
     backgroundColor,
     border,
     margin,
     padding,
+    transition,
+    textAlign: contentAlignment,
     marginBlockStart,
     marginBlockEnd,
     borderCollapse,
+    textIndent,
   };
 };
 

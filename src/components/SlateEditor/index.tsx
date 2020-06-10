@@ -24,8 +24,6 @@ const SlateEditor = ({ slateState, dispatch }: SlateEditorProps) => {
     dispatch(actions.slate.update({ value }));
   };
 
-  console.log(editor.selection);
-
   return (
     <Slate editor={editor} value={slateState.value} onChange={updateValue}>
       <Editable

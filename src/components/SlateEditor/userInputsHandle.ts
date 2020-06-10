@@ -11,7 +11,7 @@ const userInputsHandle = (editor: ReactEditor, event: React.KeyboardEvent) => {
       .children.length;
 
     const [cell] = Editor.nodes(editor, {
-      match: (n) => n.type === "td",
+      match: (n) => n.type === "TD",
     });
     if (cell) {
       let currentRow = [...editor.selection?.anchor.path];
@@ -61,6 +61,8 @@ const userInputsHandle = (editor: ReactEditor, event: React.KeyboardEvent) => {
         }
       }
       if (event.key === "Enter") {
+        event.preventDefault();
+
         Transforms.insertText(editor, "\n");
       }
     }

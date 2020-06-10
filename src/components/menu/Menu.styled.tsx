@@ -11,6 +11,7 @@ export const MenuConteneur = styled.div`
   align-items: center;
   justify-content: space-between;
   transition: border-right 500ms;
+  box-sizing: border-box;
   & svg path {
     fill: ${(props) => props.theme.color};
     transition: fill 500ms;

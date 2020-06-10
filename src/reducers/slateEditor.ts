@@ -88,7 +88,15 @@ const initialValue = [
     type: "SOUSTITRE_CHAPITRE",
     children: [{ text: "Sous-titre de Chapitre" }],
   },
-  { type: "PARAGRAPH", children: [{ text: "Paragraphe simple...." }] },
+  {
+    type: "PARAGRAPH",
+    children: [
+      {
+        text:
+          "Paragraphe simple.... Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple.. Paragraphe simple..    ",
+      },
+    ],
+  },
   {
     type: "TABLE",
     children: [
@@ -142,6 +150,7 @@ const TITRE_CHAPITRE: CustomElement = {
   name: "TITRE_CHAPITRE",
   styleLight: {
     backgroundColor: "salmon",
+    contentAlignment: ContentAlignment.center,
   },
   styleDark: {},
   children: [],
@@ -149,14 +158,14 @@ const TITRE_CHAPITRE: CustomElement = {
 const SOUSTITRE_CHAPITRE: CustomElement = {
   baseElement: ElementHtmlTypes.h3,
   name: "SOUSTITRE_CHAPITRE",
-  styleLight: { padding: 30 },
+  styleLight: { padding: 30, contentAlignment: ContentAlignment.center },
   styleDark: {},
   children: [],
 };
 const PARAGRAPH: CustomElement = {
   baseElement: ElementHtmlTypes.paragraph,
   name: "PARAGRAPH",
-  styleLight: {},
+  styleLight: { indentLevel: 2 },
   styleDark: {},
   children: [],
 };

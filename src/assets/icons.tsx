@@ -289,3 +289,103 @@ export const Trash = () => (
     </g>
   </motion.svg>
 );
+
+export const MobileView = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="17.885"
+    height="26.014"
+    viewBox="0 0 17.885 26.014"
+  >
+    <title>MobileView icon</title>
+    <path
+      id="mobileView"
+      d="M8.053,1.928H22.686a1.631,1.631,0,0,1,1.626,1.626V26.316a1.631,1.631,0,0,1-1.626,1.626H8.053a1.631,1.631,0,0,1-1.626-1.626V3.554A1.631,1.631,0,0,1,8.053,1.928Zm7.317,24.84A1.265,1.265,0,1,0,14.1,25.5,1.265,1.265,0,0,0,15.369,26.768Zm-7.317-3.7H22.686V5.18H8.053Z"
+      transform="translate(-6.427 -1.928)"
+      fill="#707070"
+    />
+  </svg>
+);
+export const ComputerView = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="38.8"
+    height="25.866"
+    viewBox="0 0 38.8 25.866"
+  >
+    <title>ComputerView icon</title>
+    <path
+      id="computerView"
+      d="M6.467,28.633A3.229,3.229,0,0,1,3.249,25.4L3.233,9.233A3.243,3.243,0,0,1,6.467,6H32.333a3.243,3.243,0,0,1,3.233,3.233V25.4a3.243,3.243,0,0,1-3.233,3.233H38.8v3.233H0V28.633Zm25.866-19.4H6.467V25.4H32.333Z"
+      transform="translate(0 -6)"
+      fill="#707070"
+    />
+  </svg>
+);
+
+export const Shortcuts = () => (
+  <svg width="37" height="35" viewBox="0 0 37 35">
+    <title>Shortcuts icon</title>
+    <defs>
+      <linearGradient
+        id="linear-gradient"
+        x1="0.146"
+        x2="1"
+        y2="1"
+        gradientUnits="objectBoundingBox"
+      >
+        <stop offset="0" stopColor="#bebebe" stopOpacity="0.365" />
+        <stop offset="1" stopColor="#383838" stopOpacity="0.576" />
+      </linearGradient>
+      <linearGradient
+        id="linear-gradient-2"
+        x1="0.046"
+        y1="0.5"
+        x2="0.965"
+        y2="0.5"
+        gradientUnits="objectBoundingBox"
+      >
+        <stop offset="0" stopColor="#d5d3cb" />
+        <stop offset="0.527" stopColor="#fff" />
+        <stop offset="1" stopColor="#d6d4cd" />
+      </linearGradient>
+    </defs>
+    <g id="Shortcuts" transform="translate(-1330 -63)">
+      <g
+        id="Rectangle_264"
+        data-name="Rectangle 264"
+        transform="translate(1330 63)"
+        stroke="#707070"
+        strokeWidth="1"
+        fill="url(#linear-gradient)"
+      >
+        <rect width="37" height="35" rx="5" stroke="none" />
+        <rect x="0.5" y="0.5" width="36" height="34" rx="4.5" fill="none" />
+      </g>
+      <g
+        id="Rectangle_263"
+        data-name="Rectangle 263"
+        transform="translate(1334 65)"
+        stroke="#707070"
+        strokeWidth="1"
+        fill="url(#linear-gradient-2)"
+      >
+        <rect width="28" height="27" rx="4" stroke="none" />
+        <rect x="0.5" y="0.5" width="27" height="26" rx="3.5" fill="none" />
+      </g>
+      <text
+        id="_"
+        data-name="?"
+        transform="translate(1343 86)"
+        fill="#7d7569"
+        fontSize="20"
+        fontFamily="LucidaGrande-Bold, Lucida Grande"
+        fontWeight="700"
+      >
+        <tspan x="0" y="0">
+          ?
+        </tspan>
+      </text>
+    </g>
+  </svg>
+);
