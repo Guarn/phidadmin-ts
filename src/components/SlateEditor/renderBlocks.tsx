@@ -1,44 +1,23 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { RenderElementProps } from "slate-react";
-import { CustomElement, ElementHtmlTypes } from "../../reducers/slateEditor";
 import { useSelector } from "react-redux";
 import { GlobalState } from "../../reducers";
 import { ThemeType } from "../../reducers/userPreferences";
+import {
+  SlateAttributes,
+  ElementHtmlTypes,
+  CustomElement,
+  PositionArgs,
+} from "./Slate.types";
+import { SousMenuContainer, VerticalBar } from "./SlateEditor.styled";
 
-const LIST_TYPES = ["numbered-list", "bulleted-list"];
-export enum ELEMENT_TYPES {
-  table = "table",
-  tr = "tr",
-  td = "td",
-  blockQuote = "block-quote",
-  bulletedList = "bulleted-list",
-  h1 = "h1",
-  h2 = "h2",
-  h3 = "h3",
-  listItem = "list-item",
-  numberedList = "numbered-list",
-  paragraph = "paragraph",
-}
-
-interface GetJSXElementFromNameProps {
-  attributes: SlateAttributes;
-  type: string;
-  children?: any;
-}
-
-type SlateAttributes = {
-  "data-slate-node": "element";
-  "data-slate-inline"?: true;
-  "data-slate-void"?: true;
-  dir?: "rtl";
-  ref: any;
-};
-
-interface SlateElementStyleProps {
+export interface SlateElementStyleProps {
   element: CustomElement;
   theme: ThemeType;
 }
-
+/**
+ * Takes a `CustomElement` and a `ThemeType`and returns a valid css object for `style={}`
+ */
 const getSlateElementStyle = ({ element, theme }: SlateElementStyleProps) => {
   const {
     backgroundColor,
@@ -53,6 +32,7 @@ const getSlateElementStyle = ({ element, theme }: SlateElementStyleProps) => {
     borderCollapse,
   } = theme === ThemeType.LIGHT ? element.styleLight : element.styleDark;
   const textIndent = ((indentLevel || 0) * 5).toString() + "%";
+  const position: PositionArgs = "relative";
   return {
     backgroundColor,
     border,
@@ -64,23 +44,34 @@ const getSlateElementStyle = ({ element, theme }: SlateElementStyleProps) => {
     marginBlockEnd,
     borderCollapse,
     textIndent,
+    position,
   };
 };
 
+export interface GetJSXElementFromNameProps {
+  attributes: SlateAttributes;
+  type: string;
+  children?: any;
+}
+/**
+ * Returns the correct `HTMLElement` to use for a `CustomElement`
+ */
 const GetJSXElementFromProps: React.FC<GetJSXElementFromNameProps> = ({
   attributes,
   type,
   children,
 }) => {
+  // List all components available in selected theme
   const components = useSelector(
     (state: GlobalState) => state.slateEditor.theme.components
   );
+
+  // Get the current user global theme choice, can be dark or light
   const theme = useSelector(
     (state: GlobalState) => state.userPreferences.theme
   );
   const element = components[type];
 
-  console.log(element.baseElement);
   if (element.baseElement) {
     switch (element.baseElement) {
       case ElementHtmlTypes.h1:
@@ -154,6 +145,19 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
   );
 };
 
+interface SousMenuProps {
+  element: CustomElement;
+}
+
+const SousMenu = ({ element }: SousMenuProps) => {
+  return (
+    <SousMenuContainer contentEditable={false}>
+      {element.name}
+      <VerticalBar />
+    </SousMenuContainer>
+  );
+};
+
 // export const toggleBlock = (
 //   editor: ReactEditor,
 //   format: ELEMENT_TYPES,
@@ -187,13 +191,6 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
 //     Transforms.wrapNodes(editor, block);
 //   }
 // };
-
-enum TEXT_ALIGNS {
-  left = "left",
-  right = "right",
-  center = "center",
-  justify = "justify",
-}
 
 // interface ThemeComponent {
 //   themeId: string;

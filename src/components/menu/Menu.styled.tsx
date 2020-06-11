@@ -5,6 +5,8 @@ export const MenuConteneur = styled.div`
   height: 100%;
   width: 70px;
   border-right: 1px solid ${(props) => props.theme.borderColor};
+  background-color: ${(props) => props.theme.backgroundColor};
+
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -28,7 +30,6 @@ export const Separator = styled.div`
   height: 1px;
   margin-bottom: 10px;
   background-color: ${(props) => props.theme.borderColor};
-  transition: background-color 500ms;
 `;
 
 export const IconsGroup = styled.div`

@@ -2,14 +2,7 @@ import React from "react";
 import { RenderLeafProps, ReactEditor } from "slate-react";
 import { isMarkActive } from "./utils";
 import { Editor } from "slate";
-
-export enum LEAF_TYPES {
-  bold = "bold",
-  code = "code",
-  italic = "italic",
-  underline = "underline",
-  span = "span",
-}
+import { LEAF_TYPES } from "./Slate.types";
 
 const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   if (leaf.bold) {

@@ -6,6 +6,7 @@ export const ContainerEditor = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: ${(props) => props.theme.backgroundColor};
 `;
 
 interface ContainerSlateProps {
@@ -21,7 +22,6 @@ export const TopBar = styled.div`
   height: 90px;
   width: 100%;
   display: flex;
-  background-color: ${(props) => props.theme.backgroundColor};
 `;
 
 export const ContainerCustomButton = styled.div`

@@ -9,6 +9,11 @@ export const GlobalStyle = createGlobalStyle<{ theme: ThemeProperties }>`
     font-family: century-gothic, sans-serif;
     font-weight: 400;
     font-style: normal;
+
+    & div,main {
+      transition: background-color 500ms width 500ms border 500ms;
+    }
+    
 }
 `;
 export interface ThemeProperties {

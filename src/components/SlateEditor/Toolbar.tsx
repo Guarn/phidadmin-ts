@@ -1,47 +1,80 @@
-import React from "react";
-import { useSlate } from "slate-react";
-import { isMarkActive, isBlockActive } from "./utils";
-import * as S from "./SlateEditor.styled";
-import { ELEMENT_TYPES } from "./renderBlocks";
-import { toggleMark, LEAF_TYPES } from "./renderLeafs";
+import React, { useRef, useEffect } from "react";
+import { useSlate, ReactEditor } from "slate-react";
+import { Range, Editor } from "slate";
+import * as S from "./Toolbar.styled";
+import { Portal, isMarkActive } from "./utils";
+import { toggleMark } from "./renderLeafs";
+import { LEAF_TYPES } from "./Slate.types";
 
-interface MarkButtonProps {
-  format: LEAF_TYPES;
-}
-export const MarkButton = ({ format }: MarkButtonProps) => {
+const Toolbar = () => {
+  const ref = useRef<HTMLDivElement>();
   const editor = useSlate();
+
+  useEffect(() => {
+    const el: HTMLDivElement | undefined = ref.current;
+    const { selection } = editor;
+
+    if (!el) {
+      return;
+    }
+
+    if (
+      !selection ||
+      !ReactEditor.isFocused(editor) ||
+      Range.isCollapsed(selection) ||
+      Editor.string(editor, selection) === ""
+    ) {
+      el.removeAttribute("style");
+
+      return;
+    } else {
+      const domSelection = window.getSelection();
+      const domRange = domSelection?.getRangeAt(0);
+      const rect = domRange?.getBoundingClientRect();
+      if (rect) {
+        el.style.opacity = "1";
+        el.style.top = `${rect.top + window.pageYOffset - el.offsetHeight}px`;
+        el.style.left = `${
+          rect.left + window.pageXOffset - el.offsetWidth / 2 + rect.width / 2
+        }px`;
+      }
+    }
+  });
+
   return (
-    <S.Button
-      active={isMarkActive(editor, format)}
-      onMouseDown={(event) => {
-        event.preventDefault();
-        toggleMark(editor, format);
-      }}
-    >
-      B
-    </S.Button>
+    <Portal>
+      <S.Menu ref={ref as any}>
+        <ButtonToolBar displayContent="G" type={LEAF_TYPES.bold} />
+        <S.Separateur />
+        <ButtonToolBar displayContent="I" type={LEAF_TYPES.italic} />
+      </S.Menu>
+    </Portal>
   );
 };
 
-interface BlockButtonProps {
-  format: ELEMENT_TYPES;
-}
+export default Toolbar;
 
-export const BlockButton = ({ format }: BlockButtonProps) => {
+interface ButtonToolBarProps {
+  displayContent: string;
+  type: LEAF_TYPES;
+}
+export const ButtonToolBar = ({ displayContent, type }: ButtonToolBarProps) => {
   const editor = useSlate();
+  let style;
+  switch (type) {
+    case LEAF_TYPES.italic:
+      style = { fontStyle: "italic" };
+  }
   return (
-    <S.Button
-      active={isBlockActive(editor, format)}
+    <S.Outils
       onMouseDown={(event) => {
         event.preventDefault();
-        // toggleBlock(editor, format, {
-        //   backgroundColor: "red",
-        //   margin: 20,
-        //   padding: 20,
-        // });
+        toggleMark(editor, type);
       }}
+      style={style}
     >
-      H1
-    </S.Button>
+      {displayContent}
+      <S.RectSelect selected={isMarkActive(editor, type)} />
+    </S.Outils>
   );
 };

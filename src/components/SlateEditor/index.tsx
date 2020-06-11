@@ -9,6 +9,7 @@ import withTables from "./withTables";
 import userInputsHandle from "./userInputsHandle";
 import Leaf from "./renderLeafs";
 import Element from "./renderBlocks";
+import Toolbar from "./Toolbar";
 
 type SlateEditorProps = ConnectedProps<typeof connector>;
 
@@ -26,6 +27,7 @@ const SlateEditor = ({ slateState, dispatch }: SlateEditorProps) => {
 
   return (
     <Slate editor={editor} value={slateState.value} onChange={updateValue}>
+      <Toolbar />
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}

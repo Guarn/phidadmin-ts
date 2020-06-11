@@ -6,7 +6,6 @@ import { themeLight, themeDark, GlobalStyle } from "./App.styled";
 import { GlobalState } from "./reducers";
 import Menu from "./components/menu/Menu";
 import Modal from "./components/Modal";
-import SlateEditor from "./components/SlateEditor";
 import Editor from "./components/pages/Editor";
 
 export type AppProps = ConnectedProps<typeof connector>;

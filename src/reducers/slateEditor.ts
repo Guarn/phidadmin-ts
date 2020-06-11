@@ -1,62 +1,13 @@
-import { Node, Element } from "slate";
+import { Node } from "slate";
 import {
   SlateEditorActions,
   SlateEditorActionsTypes,
 } from "../actions/slateEditor";
-
-export enum CustomHtmlTypes {
-  img = "img",
-}
-
-export enum ElementHtmlTypes {
-  table = "table",
-  tr = "tr",
-  td = "td",
-  blockQuote = "block-quote",
-  bulletedList = "bulleted-list",
-  h1 = "h1",
-  h2 = "h2",
-  h3 = "h3",
-  listItem = "list-item",
-  numberedList = "numbered-list",
-  paragraph = "paragraph",
-  custom = "custom",
-}
-
-export enum ContentAlignment {
-  left = "left",
-  right = "right",
-  center = "center",
-  justify = "justify",
-}
-
-export interface CustomElementStyle {
-  backgroundColor?: string;
-  border?: string;
-  margin?: number;
-  padding?: number;
-  indentLevel?: number;
-  contentAlignment?: ContentAlignment;
-  transition?: string;
-  marginBlockStart?: number;
-  marginBlockEnd?: number;
-  borderCollapse?:
-    | "-moz-initial"
-    | "inherit"
-    | "initial"
-    | "revert"
-    | "unset"
-    | "collapse"
-    | "separate"
-    | undefined;
-}
-
-export interface CustomElement extends Element {
-  baseElement: ElementHtmlTypes | CustomHtmlTypes;
-  name: string;
-  styleLight: CustomElementStyle;
-  styleDark: CustomElementStyle;
-}
+import {
+  ElementHtmlTypes,
+  CustomElement,
+  ContentAlignment,
+} from "../components/SlateEditor/Slate.types";
 
 export interface SlateTheme {
   id: string;
@@ -147,7 +98,7 @@ const initialValue = [
 ];
 const TITRE_CHAPITRE: CustomElement = {
   baseElement: ElementHtmlTypes.h2,
-  name: "TITRE_CHAPITRE",
+  name: "Chapitre",
   styleLight: {
     backgroundColor: "salmon",
     contentAlignment: ContentAlignment.center,
@@ -157,28 +108,28 @@ const TITRE_CHAPITRE: CustomElement = {
 };
 const SOUSTITRE_CHAPITRE: CustomElement = {
   baseElement: ElementHtmlTypes.h3,
-  name: "SOUSTITRE_CHAPITRE",
+  name: "Sous chapitre",
   styleLight: { padding: 30, contentAlignment: ContentAlignment.center },
   styleDark: {},
   children: [],
 };
 const PARAGRAPH: CustomElement = {
   baseElement: ElementHtmlTypes.paragraph,
-  name: "PARAGRAPH",
+  name: "Paragraphe",
   styleLight: { indentLevel: 2 },
   styleDark: {},
   children: [],
 };
 const BLOCK_QUOTE: CustomElement = {
   baseElement: ElementHtmlTypes.blockQuote,
-  name: "BLOCK_QUOTE",
+  name: "Code",
   styleLight: {},
   styleDark: {},
   children: [],
 };
 const TABLE: CustomElement = {
   baseElement: ElementHtmlTypes.table,
-  name: "TABLE",
+  name: "Tableau",
   styleLight: { border: "1px solid grey", borderCollapse: "collapse" },
   styleDark: {},
   children: [],
