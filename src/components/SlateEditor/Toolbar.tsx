@@ -1,54 +1,89 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useSlate, ReactEditor } from "slate-react";
 import { Range, Editor } from "slate";
 import * as S from "./Toolbar.styled";
-import { Portal, isMarkActive } from "./utils";
+import { isMarkActive } from "./utils";
 import { toggleMark } from "./renderLeafs";
 import { LEAF_TYPES } from "./Slate.types";
 
 const Toolbar = () => {
   const ref = useRef<HTMLDivElement>();
   const editor = useSlate();
+  const [isVisible, setIsVisible] = useState(false);
+  const { selection } = editor;
+  const slateRef = document.getElementById("SlateEditor");
 
-  useEffect(() => {
+  const handleScroll = useCallback(() => {
     const el: HTMLDivElement | undefined = ref.current;
-    const { selection } = editor;
-
-    if (!el) {
-      return;
-    }
 
     if (
-      !selection ||
-      !ReactEditor.isFocused(editor) ||
-      Range.isCollapsed(selection) ||
-      Editor.string(editor, selection) === ""
+      el &&
+      selection &&
+      ReactEditor.isFocused(editor) &&
+      !Range.isCollapsed(selection) &&
+      Editor.string(editor, selection) !== ""
     ) {
-      el.removeAttribute("style");
-
-      return;
-    } else {
       const domSelection = window.getSelection();
       const domRange = domSelection?.getRangeAt(0);
       const rect = domRange?.getBoundingClientRect();
+
       if (rect) {
-        el.style.opacity = "1";
         el.style.top = `${rect.top + window.pageYOffset - el.offsetHeight}px`;
         el.style.left = `${
           rect.left + window.pageXOffset - el.offsetWidth / 2 + rect.width / 2
         }px`;
       }
     }
-  });
+  }, [editor, selection]);
+
+  useEffect(() => {
+    const el: HTMLDivElement | undefined = ref.current;
+
+    if (slateRef) {
+      slateRef.addEventListener("scroll", handleScroll);
+    }
+
+    if (
+      el &&
+      selection &&
+      ReactEditor.isFocused(editor) &&
+      !Range.isCollapsed(selection) &&
+      Editor.string(editor, selection) !== ""
+    ) {
+      const domSelection = window.getSelection();
+      const domRange = domSelection?.getRangeAt(0);
+      const rect = domRange?.getBoundingClientRect();
+
+      if (rect) {
+        el.style.top = `${rect.top + window.pageYOffset - el.offsetHeight}px`;
+        el.style.left = `${
+          rect.left + window.pageXOffset - el.offsetWidth / 2 + rect.width / 2
+        }px`;
+      }
+    }
+
+    if (
+      selection &&
+      ReactEditor.isFocused(editor) &&
+      !Range.isCollapsed(selection) &&
+      Editor.string(editor, selection) !== ""
+    ) {
+      !isVisible && setIsVisible(true);
+    } else {
+      isVisible && setIsVisible(false);
+    }
+
+    return () => {
+      slateRef?.removeEventListener("scroll", handleScroll);
+    };
+  }, [editor, selection, isVisible, slateRef, handleScroll]);
 
   return (
-    <Portal>
-      <S.Menu ref={ref as any}>
-        <ButtonToolBar displayContent="G" type={LEAF_TYPES.bold} />
-        <S.Separateur />
-        <ButtonToolBar displayContent="I" type={LEAF_TYPES.italic} />
-      </S.Menu>
-    </Portal>
+    <S.Menu ref={ref as any} isVisible={isVisible}>
+      <ButtonToolBar displayContent="G" type={LEAF_TYPES.bold} />
+      <S.Separateur />
+      <ButtonToolBar displayContent="I" type={LEAF_TYPES.italic} />
+    </S.Menu>
   );
 };
 

@@ -37,6 +37,22 @@ export enum ElementHtmlTypes {
 }
 
 /**
+ * Contains Slate custom types to use in document. Update this for every new custom component.
+ */
+export const accessiblesHTMLElements = [
+  "TABLEAU",
+  "PARAGRAPH",
+  "CHAPITRE",
+  "TITRE_CHAPITRE",
+  "SOUSTITRE_CHAPITRE",
+];
+
+/**
+ * Contains Slate custom subelements. Usefull to be sure to select a block and not a sub part.
+ */
+export const accessiblesHTMLSubElements = ["TD", "TR"];
+
+/**
  * Contains custom HTML elements to use to create a `CustomElement`
  */
 export enum CustomHtmlTypes {

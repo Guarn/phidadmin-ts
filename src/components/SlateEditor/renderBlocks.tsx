@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import React from "react";
 import { RenderElementProps } from "slate-react";
 import { useSelector } from "react-redux";
 import { GlobalState } from "../../reducers";
@@ -9,7 +9,6 @@ import {
   CustomElement,
   PositionArgs,
 } from "./Slate.types";
-import { SousMenuContainer, VerticalBar } from "./SlateEditor.styled";
 
 export interface SlateElementStyleProps {
   element: CustomElement;
@@ -142,19 +141,6 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
     >
       {children}
     </GetJSXElementFromProps>
-  );
-};
-
-interface SousMenuProps {
-  element: CustomElement;
-}
-
-const SousMenu = ({ element }: SousMenuProps) => {
-  return (
-    <SousMenuContainer contentEditable={false}>
-      {element.name}
-      <VerticalBar />
-    </SousMenuContainer>
   );
 };
 

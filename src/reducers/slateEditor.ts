@@ -13,6 +13,12 @@ export interface SlateTheme {
   id: string;
   name: string;
   description: string;
+  /**
+   * Object containing all the elements used in the slate theme. access by `components[NAME]`.
+   * @example
+   * components["SOUS_CHAPITRE"]
+   *
+   */
   components: Record<string, CustomElement>;
 }
 

@@ -5,7 +5,7 @@ import { getMaxOffset } from "./utils";
 const userInputsHandle = (editor: ReactEditor, event: React.KeyboardEvent) => {
   const { selection } = editor;
 
-  console.log(event.key);
+  console.log(event);
   if (selection && Range.isCollapsed(selection)) {
     const tableRowsCount = Editor.parent(editor, selection, { depth: 2 })[0]
       .children.length;

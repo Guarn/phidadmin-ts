@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import * as S from "./Editor.styled";
 import SlateEditor from "../../SlateEditor";
 import * as Icons from "../../../assets/icons";
+import { ColContainer } from "../../SlateEditor/SlateEditor.styled";
 
 interface EditorProps {
   titreLecon: string;
@@ -34,10 +35,12 @@ const Editor = ({ titreLecon, titreChapitre }: EditorProps) => {
           </S.Media>
         </S.ShorcutsMedia>
       </S.TopBar>
-      <S.EditContainer>
+      <S.EditContainer id="SlateEditor">
+        <ColContainer></ColContainer>
         <S.ContainerSlate mobileView={mobileView}>
           <SlateEditor />
         </S.ContainerSlate>
+        <ColContainer></ColContainer>
       </S.EditContainer>
     </S.ContainerEditor>
   );

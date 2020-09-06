@@ -1,17 +1,20 @@
-import styled from "styled-components";
+import styled from "styled-components/macro";
 
-export const Menu = styled.div.attrs((props) => ({}))`
+interface MenuProps {
+  isVisible: boolean;
+}
+export const Menu = styled.div<MenuProps>`
   position: absolute;
   z-index: 1;
-  top: -10000px;
-  left: -10000px;
+  top: 0px;
+  left: 0px;
   margin-top: -6px;
-  opacity: 0;
+  opacity: ${({ isVisible }) => (isVisible ? "1" : "0")};
+  display: ${({ isVisible }) => (isVisible ? "flex" : "none")};
   background-color: ${(props) => props.theme.color};
   transition: opacity 0.2s;
   height: 45px;
   border-radius: 5px;
-  display: flex;
   box-shadow: 0 0 5px;
 `;
 
@@ -23,7 +26,6 @@ export const Outils = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: "century gothic";
   font-size: 24px;
   color: white;
   transition: all 0.2s;
